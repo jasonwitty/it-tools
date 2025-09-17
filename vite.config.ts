@@ -102,6 +102,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'date-fns/format': resolve(__dirname, 'src/shims/date-fns-format'),
     },
   },
   define: {

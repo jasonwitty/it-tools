@@ -6,6 +6,141 @@
 
 Useful tools for developer and people working in IT. [Have a look !](https://it-tools.tech).
 
+**About This Fork**
+
+This fork adds a streamlined workflow for tiling window managers (e.g., Hyprland, Sway, i3), a no‑chrome embed view for tools, and a Rofi script mode with per‑tool icons. It’s optimized for launching individual tools in app‑mode windows with clean keyboard‑driven navigation.
+
+Highlights of this fork:
+- Embed mode for any tool via `?embed=1` (minimal UI, dark background).
+- Rofi integration with icons and a “🛠” tools menu mode.
+- Desktop launchers for each tool (hidden from Applications via `NoDisplay=true`).
+
+Demo (placeholder):
+
+![Animated demo – TODO](docs/demo-animated.png)
+
+---
+
+## Quick Start (Docker)
+
+Clone this fork (replace the URL with your fork if different), then build and run locally on port 8234:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/it-tools.git
+cd it-tools
+docker build -t it-tools:embed .
+docker run -d --name it-tools-embed --restart unless-stopped -p 8234:80 it-tools:embed
+```
+
+Open a tool in embed mode (no menu):
+
+- Token Generator: `http://localhost:8234/token-generator?embed=1`
+- UUID: `http://localhost:8234/uuid-generator?embed=1`
+
+Notes:
+- “Pretty” routes differ from folder names for some tools. Examples:
+  - YAML Viewer → `/yaml-prettify`
+  - QR Code Generator → `/qrcode-generator`
+- The app’s router supports SPA refresh via Nginx `try_files`.
+
+---
+
+## Rofi Integration (tiling WM friendly)
+
+This fork ships a generator that builds:
+- A Rofi script mode (`~/.local/bin/rofi-it-tools`) listing all tools with icons.
+- Per‑tool desktop entries (hidden from Applications).
+- A “Tools: Menu” desktop entry that opens Rofi directly in the tools mode.
+
+Prereqs:
+- fish shell, rofi
+- Chromium‑based browser (brave/chromium/google‑chrome)
+- librsvg for SVG→PNG rasterization in Rofi (recommended)
+  - Arch/CachyOS: `sudo pacman -S librsvg`
+  - Debian/Ubuntu: `sudo apt install librsvg2-bin`
+
+Generate launchers and menu:
+
+```bash
+fish ./generate-it-tools-launchers.fish
+```
+
+Launch the menu:
+
+```bash
+rofi -show-icons -modi "drun,🛠:$HOME/.local/bin/rofi-it-tools" -show 🛠
+# or use the desktop entry "Tools: Menu"
+# or the convenience script:
+~/.local/bin/rofi-tools-menu
+```
+
+Make it default in Rofi (persistent):
+
+- Create or edit `~/.config/rofi/config.rasi` and add one of the following:
+
+Option A — Emoji mode name (recommended):
+
+```rasi
+configuration {
+  show-icons: true;
+  modi: "drun,🛠:/home/YOUR-USER/.local/bin/rofi-it-tools";
+  kb-mode-next: "Control+Tab";
+  kb-mode-previous: "Control+Shift+Tab";
+}
+```
+
+Then run: `rofi -show 🛠`
+
+Option B — Keep mode name "tools" but display an icon label:
+
+```rasi
+configuration {
+  show-icons: true;
+  modi: "drun,tools:/home/YOUR-USER/.local/bin/rofi-it-tools";
+  display-tools: "🛠";
+  kb-mode-next: "Control+Tab";
+  kb-mode-previous: "Control+Shift+Tab";
+}
+```
+
+Then run: `rofi -show tools`
+
+Config overrides (`~/.config/it-tools/config.fish`):
+
+```fish
+set -x IT_TOOLS_BASE_URL "http://localhost:8234"
+set -x IT_TOOLS_BROWSER_CMD brave         # or chromium/google-chrome
+set -x IT_TOOLS_BROWSER_FLAGS "--disable-features=ExtensionsToolbarMenu,..."
+set -x IT_TOOLS_PREFIX ""                 # optional prefix for Exec
+set -x IT_TOOLS_MODI_LABEL "🛠"            # rofi mode label
+```
+
+Icons:
+- Curated icons are seeded into `~/.config/it-tools/icons/` on each run.
+- Drop‑in user overrides live in `~/.config/it-tools/icons.d/` (these always win).
+- Rofi uses cached PNGs in `~/.config/it-tools/icons.cache/` for reliability.
+
+Tips:
+- Switch Rofi modes: `Ctrl+Tab` / `Ctrl+Shift+Tab` (configurable).
+- The tools list shows clean names (no `tools/` prefix) with per‑tool icons.
+
+---
+
+## Embed Mode
+
+Add `?embed=1` to any tool URL to render only the tool content, with a dark background and no menu/top bar. Examples:
+
+- `http://localhost:8234/token-generator?embed=1`
+- `http://localhost:8234/yaml-prettify?embed=1`
+
+Accepted values: `1`, `true`, `yes`.
+
+---
+
+## Upstream Project README
+
+The sections below are imported from the original project to keep upstream docs handy for reference. They may not describe fork‑specific behavior such as embed mode, Rofi tooling, or launcher generation.
+
 ## Functionalities and roadmap
 
 Please check the [issues](https://github.com/CorentinTh/it-tools/issues) to see if some feature listed to be implemented.

@@ -1,11 +1,14 @@
 # build stage
 FROM node:lts-alpine AS build-stage
-# Set environment variables for non-interactive npm installs
-ENV NPM_CONFIG_LOGLEVEL warn
-ENV CI true
+# Set environment variables for non-interactive installs (use key=value syntax)
+ENV NPM_CONFIG_LOGLEVEL=warn
+ENV CI=true
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm i --frozen-lockfile
+# Use the pnpm version pinned in package.json via Corepack
+RUN corepack enable && corepack prepare pnpm@9.11.0 --activate
+# Lockfile is out of sync with updated devDeps; install without frozen lockfile
+RUN pnpm install --frozen-lockfile=false
 COPY . .
 RUN pnpm build
 
