@@ -17,7 +17,7 @@ Highlights of this fork:
 
 Demo (placeholder):
 
-![Animated demo – TODO](docs/demo-animated.png)
+![Animated demo](docs/demo-animated.apng)
 
 ---
 
@@ -55,6 +55,7 @@ This fork ships a generator that builds:
 Prereqs:
 - fish shell, rofi
 - Chromium‑based browser (brave/chromium/google‑chrome)
+  - Note: this fork defaults to the Brave browser and has been primarily tested with Brave. Other Chromium‑based browsers should work but have received limited testing.
 - librsvg for SVG→PNG rasterization in Rofi (recommended)
   - Arch/CachyOS: `sudo pacman -S librsvg`
   - Debian/Ubuntu: `sudo apt install librsvg2-bin`
