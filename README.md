@@ -17,7 +17,7 @@ Highlights of this fork:
 
 Demo (placeholder):
 
-![Animated demo](docs/demo-animated.apng)
+![Animated demo](demo-animated.apng)
 
 ---
 
