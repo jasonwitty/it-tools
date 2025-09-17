@@ -15,7 +15,7 @@ Highlights of this fork:
 - Rofi integration with icons and a “🛠” tools menu mode.
 - Desktop launchers for each tool (hidden from Applications via `NoDisplay=true`).
 
-Demo (placeholder):
+Demo:
 
 ![Animated demo](demo-animated.apng)
 
